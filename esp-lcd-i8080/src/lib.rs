@@ -168,11 +168,14 @@ impl<'d> I8080Interface<'d> {
         }
     }
 
-    /// The command for the next data transfer: a held-back memory write, or none to continue one.
+    /// The command for the next data transfer: the held-back memory write for the first chunk,
+    /// then `write_memory_continue` for every later one.
+    ///
+    /// Continuing with no command phase (`Command::None`) byte-swaps every other chunk on real
+    /// hardware: the pixel byte pairing drifts by one at each transfer boundary. A command phase
+    /// makes the controller start a fresh pixel, so each chunk lines up again.
     fn next_command(&mut self) -> Command<u8> {
-        self.pending_write
-            .take()
-            .map_or(Command::None, Command::One)
+        Command::One(self.pending_write.take().unwrap_or(WRITE_MEMORY_CONTINUE))
     }
 }
 

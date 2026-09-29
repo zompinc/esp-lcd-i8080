@@ -56,7 +56,8 @@ The i8080 driver cannot run a DMA transfer without data, which affects commands 
 parameters:
 
 - `write_memory_start` and `write_memory_continue` are held back and sent as the command phase of
-  the first pixel chunk.
+  the first pixel chunk. Every later chunk starts with `write_memory_continue`: continuing without
+  a command phase leaves every other chunk byte-swapped on real hardware.
 - Any other parameterless command (`SLPOUT`, `DISPON`, ...) is followed by one `0x00` byte, which
   MIPI DCS controllers ignore.
 
