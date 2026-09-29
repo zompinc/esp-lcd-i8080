@@ -18,6 +18,12 @@ type Frame<'a> = FrameBuffer<'a>;
 const W: i32 = WIDTH as i32;
 const H: i32 = HEIGHT as i32;
 
+/// Name on the greeting page; set `DEMO_NAME` when building to greet someone.
+const GREETING_NAME: &str = match option_env!("DEMO_NAME") {
+    Some(name) => name,
+    None => "Rustacean",
+};
+
 const TITLE: FontRenderer = FontRenderer::new::<fonts::u8g2_font_helvB12_tf>();
 const HUGE: FontRenderer = FontRenderer::new::<fonts::u8g2_font_helvB24_tf>();
 const LARGE: FontRenderer = FontRenderer::new::<fonts::u8g2_font_helvB18_tf>();
@@ -217,13 +223,13 @@ impl App {
         centered(
             &HUGE,
             f,
-            "Travis Lu",
+            GREETING_NAME,
             W / 2 + 3,
             88 + bob + 3,
             Rgb565::BLACK,
         );
         let rainbow = self.palette[(self.frame.wrapping_mul(2) & 0xFF) as usize];
-        centered(&HUGE, f, "Travis Lu", W / 2, 88 + bob, rainbow);
+        centered(&HUGE, f, GREETING_NAME, W / 2, 88 + bob, rainbow);
         centered(
             &BODY,
             f,
