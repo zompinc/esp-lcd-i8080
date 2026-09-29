@@ -1,0 +1,21 @@
+[package]
+name        = "esp-lcd-i8080"
+version     = "0.1.0"
+description = "mipidsi display interface for the ESP32-S3 LCD_CAM peripheral in 8-bit i8080 mode, with DMA double buffering"
+keywords    = ["esp32", "display", "mipidsi", "i8080", "no-std"]
+categories  = ["embedded", "no-std", "hardware-support"]
+readme      = "README.md"
+
+edition.workspace      = true
+rust-version.workspace = true
+license.workspace      = true
+repository.workspace   = true
+
+[dependencies]
+esp-hal = { workspace = true }
+mipidsi = { workspace = true }
+
+[features]
+default = ["esp32s3"]
+## Target chip. The ESP32-S3 is currently the only esp-hal chip with an i8080 LCD driver.
+esp32s3 = ["esp-hal/esp32s3"]

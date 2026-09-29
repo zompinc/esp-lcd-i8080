@@ -1,0 +1,36 @@
+[package]
+name        = "lilygo-t-display-s3"
+version     = "0.1.0"
+description = "Board support for the LILYGO T-Display-S3: ST7789 display over DMA, backlight, buttons and battery"
+keywords    = ["esp32", "lilygo", "t-display", "bsp", "no-std"]
+categories  = ["embedded", "no-std", "hardware-support"]
+readme      = "README.md"
+
+edition.workspace      = true
+rust-version.workspace = true
+license.workspace      = true
+repository.workspace   = true
+
+[dependencies]
+embedded-graphics-core = "0.4.0"
+esp-hal                = { workspace = true, features = ["esp32s3"] }
+esp-lcd-i8080          = { workspace = true, features = ["esp32s3"] }
+mipidsi                = { workspace = true }
+static_cell            = "2.1.1"
+
+[dev-dependencies]
+embassy-executor       = { version = "0.10.0", features = ["log"] }
+embassy-sync           = "0.8"
+embassy-time           = { version = "0.5.0", features = ["log"] }
+embedded-graphics      = "0.8.2"
+esp-alloc              = { version = "0.11.0", features = ["esp32s3"] }
+esp-backtrace          = { version = "0.20.0", features = ["esp32s3", "panic-handler", "println"] }
+esp-bootloader-esp-idf = { version = "0.6.0", features = ["esp32s3", "log-04"] }
+esp-hal                = { workspace = true, features = ["esp32s3", "log-04"] }
+esp-println            = { version = "0.18.0", features = ["esp32s3", "log-04"] }
+esp-radio              = { version = "1.0.0-beta.1", features = ["esp-alloc", "esp32s3", "log-04", "unstable", "wifi"] }
+esp-rtos               = { version = "0.4.0", features = ["embassy", "esp-alloc", "esp-radio", "esp32s3", "log-04"] }
+heapless               = "0.9.3"
+libm                   = "0.2.16"
+log                    = "0.4.27"
+u8g2-fonts             = { version = "0.8.0", features = ["embedded_graphics_textstyle"] }

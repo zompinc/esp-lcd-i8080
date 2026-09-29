@@ -1,0 +1,24 @@
+[workspace]
+resolver = "3"
+members  = ["esp-lcd-i8080", "lilygo-t-display-s3"]
+
+[workspace.package]
+edition      = "2024"
+rust-version = "1.88"
+license      = "MIT OR Apache-2.0"
+repository   = "https://github.com/zompinc/esp-lcd-i8080"
+
+[workspace.dependencies]
+esp-hal       = { version = "~1.2.2", features = ["unstable"] }
+esp-lcd-i8080 = { version = "0.1.0", path = "esp-lcd-i8080" }
+mipidsi       = "0.10.0"
+
+[profile.dev]
+# The default debug profile is too slow and too big for resource-constrained devices.
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1
+debug         = 2
+lto           = "fat"
+opt-level     = "s"
