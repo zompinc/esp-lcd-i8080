@@ -1,6 +1,6 @@
 [package]
 name        = "lilygo-t-display-s3"
-version     = "0.1.0"
+version     = "0.1.1"
 description = "Board support for the LILYGO T-Display-S3: ST7789 display over DMA, backlight, buttons and battery"
 keywords    = ["esp32", "lilygo", "t-display", "bsp", "no-std"]
 categories  = ["embedded", "no-std", "hardware-support"]
