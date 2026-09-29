@@ -39,7 +39,8 @@ cargo run --release --example demo
 
 - `hello`: text, shapes and the battery voltage, updated when a button is pressed.
 - `demo`: a greeting with confetti, a plasma animation, system info and a WiFi scan, cycled
-  with BOOT; KEY changes brightness.
+  with BOOT; KEY changes brightness. Set `DEMO_NAME` to change the name on the greeting:
+  `DEMO_NAME="Ferris" cargo run --release --example demo`.
 
 ## Pin map
 
