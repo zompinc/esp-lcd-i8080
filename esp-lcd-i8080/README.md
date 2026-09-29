@@ -69,4 +69,4 @@ parameters:
 
 ## License
 
-Licensed under the [MIT license](LICENSE).
+Licensed under the [MIT license](https://github.com/zompinc/esp-lcd-i8080/blob/master/LICENSE).
