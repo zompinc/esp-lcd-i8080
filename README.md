@@ -24,6 +24,19 @@ cargo run --release --example hello
 cargo run --release --example demo
 ```
 
+## Releasing
+
+Bump the crate's `version` in its `Cargo.toml`, merge, then push a tag named after the crate:
+
+```sh
+git tag esp-lcd-i8080-v0.1.1
+git push origin esp-lcd-i8080-v0.1.1
+```
+
+The `Release` workflow checks that the tag matches `Cargo.toml`, attests build provenance for the
+packaged `.crate`, and publishes it with crates.io Trusted Publishing (no stored token). Verify a
+release with `gh attestation verify <file>.crate --repo zompinc/esp-lcd-i8080`.
+
 ## License
 
 Licensed under the [MIT license](LICENSE).

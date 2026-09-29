@@ -1,0 +1,78 @@
+name: Release
+
+# Push a tag named <crate>-v<version> (e.g. esp-lcd-i8080-v0.1.1) to publish that crate.
+on:
+  push:
+    tags:
+      - "esp-lcd-i8080-v*"
+      - "lilygo-t-display-s3-v*"
+
+env:
+  ACT:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Add required reviewers to this environment to gate every publish.
+    environment: release
+    permissions:
+      contents: read
+      id-token: write # crates.io Trusted Publishing and build provenance
+      attestations: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: esp-rs/xtensa-toolchain@v1.7.0
+        with:
+          default: true
+          buildtargets: esp32s3
+          ldproxy: false
+
+      - name: Match tag to crate version
+        id: crate
+        run: |
+          tag="$GITHUB_REF_NAME"
+          crate="${tag%-v*}"
+          version="${tag##*-v}"
+          actual=$(cargo metadata --no-deps --format-version 1 \
+            | jq -r --arg c "$crate" '.packages[] | select(.name == $c) | .version')
+          if [ "$actual" != "$version" ]; then
+            echo "::error::Tag $tag does not match $crate version '$actual' in Cargo.toml"
+            exit 1
+          fi
+          echo "name=$crate" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check
+        run: |
+          cargo fmt --all --check
+          cargo clippy --release --workspace --examples -- -D warnings
+          cargo build --release --workspace --examples
+
+      - name: Package
+        run: cargo package -p ${{ steps.crate.outputs.name }}
+
+      - name: Attest build provenance
+        if: ${{ !env.ACT }}
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: target/package/${{ steps.crate.outputs.name }}-${{ steps.crate.outputs.version }}.crate
+
+      - name: Authenticate with crates.io
+        if: ${{ !env.ACT }}
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
+
+      - name: Publish
+        if: ${{ !env.ACT }}
+        run: cargo publish -p ${{ steps.crate.outputs.name }}
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+      - name: Publish (dry run under act)
+        if: ${{ env.ACT }}
+        run: cargo publish -p ${{ steps.crate.outputs.name }} --dry-run
